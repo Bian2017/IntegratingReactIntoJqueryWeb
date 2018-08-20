@@ -55,7 +55,7 @@ render() {
 }
 ```
 
-猜测(待验证)：antd项目使用了开源项目[rc-tabs](https://github.com/react-component/tabs)，而开源项目rc-tabs使用了refs。在如上代码上，tabPanes()可以认为是一个功能组件(functional component)，但是ref是不能应用于功能组件上的(参阅：https：//reactjs.org/docs/refs-and-the-dom.htm)。故上述情况导致refs被设置为null，所以报如上错误。
+猜测(待验证)：antd项目使用了开源项目[rc-tabs](https://github.com/react-component/tabs)，而开源项目rc-tabs使用了refs。在如上代码上，tabPanes()可以认为是一个功能组件(functional component)，但是ref是不能应用于[功能组件](https://reactjs.org/docs/refs-and-the-dom.html)上的。故上述情况导致refs被设置为null，所以报如上错误。
 
 
 主要参考链接：[链接1](https://github.com/reactjs/react-autocomplete/issues/287)、[链接2](https://github.com/facebook/react/issues/9244)。
@@ -107,7 +107,7 @@ func()
 func({offset:1, limit:10})
 ```
 
-分析：func()中params值为undefined。对undefined进行扩展，就会如上错误。
+分析：func()中params值为undefined。对undefined进行扩展，就会如上错误。
 
 **修改：**
 
