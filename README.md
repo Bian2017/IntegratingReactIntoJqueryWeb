@@ -7,6 +7,7 @@
 jQuery项目维护起来比较痛苦，就在原有公司项目上采用React，使用蚂蚁金服的Ant Design做UI库。
 
 二、atool-build工具
+---
 
 ### 2.1 webpack.config.js
 
@@ -26,9 +27,9 @@ module.exports = function (webpackConfig) {
 
 ### 2.2 package.json
 
-atool-build 要求 package.json 文件里面增加 entry 字段。
+atool-build 要求在 package.json 文件里面增加 entry 字段。
 
-区别于传统的SPA应用，公司项目的路由跳转是在Node端实现的。要在原有项目上进行兼容，并使用React进行后续需求开发，目前想到的办法是针对每个页面都设置entry，然后生成不同的bundle文件。最后每个页面通过script标签把自己的bundle文件引进来。
+区别于传统的SPA应用，公司项目的路由跳转是在Node端实现的。要在原有项目上进行兼容，并使用React进行后续需求开发，目前想到的办法是针对每个页面都设置entry，然后生成不同的bundle文件。最后每个页面通过script标签把自己的bundle文件引进来。
 
 此时有个问题：如何针对不同目录下的入口js，编译生成的bundle文件也存放在不同目录下。**解决：**
 
