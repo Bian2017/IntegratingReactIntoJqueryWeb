@@ -17,6 +17,7 @@ jQuery项目维护起来比较痛苦，就在原有公司项目上采用React，
 #### 4.1.1 使用ref属性注意点
 
 **报错：**
+
 ![](https://raw.githubusercontent.com/Bian2017/jQueryWithReact/master/doc/img/QQ20180822-161454.png)
 
 **原代码：**
@@ -36,7 +37,7 @@ handleScroll = () => {
   </div>
 </div>
 ```
-
+
 **错误原因：**
 
 【摘自[链接](https://react.docschina.org/docs/refs-and-the-dom.html)】如果你之前使用过 React ，你可能了解过之前的API中的 string 类型的 ref 属性，比如 “textInput” ，你可以通过 this.refs.textInput 访问DOM节点。我们不建议使用它，因为 String 类型的 refs 存在问题。它已过时并可能会在未来的版本被移除。如果你目前还在使用 this.refs.textInput 这种方式访问 refs ，我们建议用回调函数的方式代替。
