@@ -1,19 +1,19 @@
 
-# webpack 配置
+## 三、webpack 配置
 
-## 一、webpack 4
+### 3.1 webpack 4
 
-### 1.1 新特性
+#### 3.1.1 新特性
 
 + webpack 4 将移除 CommonsChunkPlugin, 取而代之的是两个新的配置项 optimization.splitChunks 和 optimization.runtimeChunk。
 
 
 
-## 三、 场景需求
+### 3.2 场景需求
 
-### 3.1 多个文件输出到多个目录
+#### 3.2.1 多个文件输出到多个目录
 
-**原entry配置**
+**原entry配置**
 
 ```JSON
 {
@@ -22,8 +22,9 @@
     "nameB": "./src/work/robot/fileB/fileNameB/nameB.js",
   }
 }
+```
 
-修改成如下的entry配置，就能将文件输出到指定目录下。
+修改成如下配置，就能将文件输出到指定目录下。
 
 ```JSON
 {
@@ -34,7 +35,7 @@
 }
 ```
 
-### 3.2 css-module问题
+#### 3.2.2 css-module问题
 
 ```JS
 import React from 'react'
@@ -55,9 +56,11 @@ class App extends React.Component {
 }
 ```
 
-开发中发现设置的样式没有任何效果，而console.log(style.main)的时候，结果是undefined。
+开发中发现设置的样式没有任何效果，并且console.log(style.main)的结果是undefined。
 
-究其原因，上述的用法是css-module。待深究什么是css-module(貌似CSS-loader要设置options: { modules: true })。
+这是因为上述的用法是css-module。
+
+待深究什么是css-module(貌似CSS-loader要设置options: { modules: true })。
 
 
 或采用如下方式。
@@ -73,9 +76,7 @@ class App extends React.Component {
 }
 ```
 
-
-
-## 四、webpack配置
+### 3.4 webpack配置
 
 ```JS
 const path = require('path')
