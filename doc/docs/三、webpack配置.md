@@ -1,5 +1,46 @@
 
-## 三、webpack 配置
+Webpack 配置
+---
+项目背景：原项目是典型的MVC结构，前端页面的开发采用的是jQuery + ejs，通过NodeJS进行了路由跳转以及服务端渲染。
+
+个人对jQuery用起来不是特别熟练，维护起来分外痛苦。其次，产品经理设计产品原型采用的是Ant Design，使用jQuery很难做到与产品设计的统一。
+
+由于原项目已经很庞大，对项目代码进行重构不太现实，故只能针对后续需求的迭代开发采用React。在jQuery的基础上再采用React进行开发，会遇到不少性能问题，目前采用了如下方式进行了性能优化：
+
+## 1. 输入配置
+
+## 2. 输出配置
+
+```JS
+output: {
+  path: path.join(__dirname, '../public/dist/work'),
+  filename: "[name].js",
+  chunkFilename: "[name].[chunkhash:8].js"            //不宜设置成[name].[hash:8].js
+}
+```
+
+有别于传统的SPA应用，本项目的路由分发在Node端进行，并采用了ejs模板引擎进行渲染。在这样的场景下采用react框架进行后续需求迭代开发，目前想到的方法是针对每个页面产生一个单独输出，并将该输出文件通过script标签置于文件底部。由于是手动输入的，无法通过插件自动注入，所以filename采用[name].js，而不采用[name].[hash:8].js，这样就不会有每次文件变动就需手动重新载入的现象存在。
+
+```html
+<link rel="stylesheet" type="text/css" href="/dist/work/pageA.css">   <!-- 手动注入css -->
+<div>
+    <ol class="breadcrumb">
+        <li>
+            <a>
+                <%=title%>
+            </a>
+        </li>
+        <li class="pull-right">
+            <a class="btn btn-sm btn-default" href="#/wechat">
+                <i class="fa fa-chevron-left"></i>
+                返回列表
+            </a>
+        </li>
+    </ol>
+    <div class="wechat" id="wcManage"></div>
+</div>
+<script type="text/javascript" src="/dist/work/pageA.js"></script>   <!-- 手动注入react代码 --> 
+```
 
 ### 3.1 webpack 4
 
