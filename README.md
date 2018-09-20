@@ -180,15 +180,10 @@ func({offset:1, limit:10})
 ```
 
 
-五、性能优化
+[五、性能优化](https://github.com/Bian2017/jQueryWithReact/blob/master/doc/docs/%E4%BA%94%E3%80%81%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.md)
 ---
 
-### 5.1 浏览器缓存
 
-将common.js进行缓存，通过combo服务进行缓存。
-
-
-另外一种方式：通过304。
 
 六、待解决
 
