@@ -12,10 +12,6 @@
 
 [四、性能优化](https://github.com/Bian2017/jQueryWithReact/blob/master/doc/docs/%E5%9B%9B%E3%80%81%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.md)
 
-[五、踩坑指南](https://github.com/Bian2017/jQueryWithReact/blob/master/doc/docs/%E4%BA%94%E3%80%81%E8%B8%A9%E5%9D%91%E6%8C%87%E5%8D%97.md)
+[五、React使用小结](https://github.com/Bian2017/jQueryWithReact/blob/master/doc/docs/%E4%BA%94%E3%80%81React%E4%BD%BF%E7%94%A8%08%E5%B0%8F%E7%BB%93.md)
 
-
-
-六、待解决
-
-在package.json中运行的编译脚本和在shell中输入相同的编译脚本，webpack生成的最终文件竟然不同。
+[六、Ant Design使用小结](https://github.com/Bian2017/jQueryWithReact/blob/master/doc/docs/%E5%85%AD%E3%80%81Ant%20Desgin%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93.md)
