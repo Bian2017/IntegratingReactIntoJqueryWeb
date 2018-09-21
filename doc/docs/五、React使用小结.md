@@ -2,13 +2,11 @@
 React使用小结
 ---
 
-## 1. React踩坑小结
-
-### 1.1 ref属性注意点
+### 1. ref属性注意点
 
 **报错：**
 
-![](https://raw.githubusercontent.com/Bian2017/jQueryWithReact/mster/doc/img/QQ20180822-161454.png)
+![](https://raw.githubusercontent.com/Bian2017/jQueryWithReact/master/doc/img/QQ20180822-161454.png)
 
 **原代码：**
 
@@ -48,10 +46,51 @@ handleScroll = () => {
 }
 
 <div className="scroll-wrapper">
-  <div ref={inst=>this.messageList = inst} className="box_bd"   onScroll={() => this.handleScroll()}>
+  <div ref={inst => this.messageList = inst} className="box_bd"   onScroll={() => this.handleScroll()}>
     xxxx
   </div>
 </div>
+```
+
+### 2. 尽量不要在render函数中定义无状态组件
+
+**出错现象：**
+
+在render函数中定义了一个无状态组件，该无状态组件有个Input输入，每次输入一个字符Input就立马失去焦点。
+
+```JS
+class ComponentA extends React.Component() {
+  render() {
+    const { arrayData } = this.props
+    const FormItem =  () => arrayData.map(d => <Input key={d.id} value={d.value} />)
+    
+    return <div>
+      <FormItem />
+      xxx
+      </div>
+  }
+}
+```
+
+**错误原因：**
+
+由于Input标签的值是存储在Redux中的，所以每当Input值发生变化，就会引起props发生变化，从而引起重新渲染。而无状态组件定义在render中，就会重新生成一个新的无状态组件，由于是新的组件，所以就会失去焦点。
+
+**代码修改：**
+
+```JS
+const FormItem =  () => arrayData.map(d => <Input key={d.id} value={d.value} />)
+
+class ComponentA extends React.Component() {
+  render() {
+    const {arrayData} = this.props
+    
+    return <div>
+      <FormItem />
+      xxx
+      </div>
+  }
+}
 ```
 
 ### 1.2 
