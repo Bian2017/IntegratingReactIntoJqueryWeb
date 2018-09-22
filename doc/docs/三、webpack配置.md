@@ -9,17 +9,7 @@ Webpack 配置
 
 ## 1. 输入配置
 
-## 2. 输出配置
-
-```JS
-output: {
-  path: path.join(__dirname, '../public/dist/work'),
-  filename: "[name].js",
-  chunkFilename: "[name].[chunkhash:8].js"            //不宜设置成[name].[hash:8].js
-}
-```
-
-有别于传统的SPA应用，本项目的路由分发在Node端进行，并采用了ejs模板引擎进行渲染。在这样的场景下采用react框架进行后续需求迭代开发，目前想到的方法是针对每个页面产生一个单独输出，并将该输出文件通过script标签置于文件底部。由于是手动输入的，无法通过插件自动注入，所以filename采用[name].js，而不采用[name].[hash:8].js，这样就不会因为每次文件变动就需手动重新载入的现象存在。
+有别于传统的SPA应用，本项目的路由分发在Node端进行，并采用了ejs模板引擎进行渲染。在这样的场景下采用react框架进行后续需求迭代开发，目前想到的方法是针对每个页面产生一个单独输出，并将该输出文件通过script标签置于文件底部，如下所示。
 
 ```html
 <link rel="stylesheet" type="text/css" href="/dist/work/pageA.css">   <!-- 手动注入css -->
@@ -41,6 +31,33 @@ output: {
 </div>
 <script type="text/javascript" src="/dist/work/pageA.js"></script>   <!-- 手动注入react代码 --> 
 ```
+
+需求可以概括为：每个页面都有一个对应的JS脚本和CSS文件。为了防止页面重名，需将JS脚本输出到不同目录下。webpack此时就需配置成多入口多输出的形式，entry的配置如下所示：
+
+```JSON
+{
+  "entry": {
+    "robot/fileA/fileNameA/nameA": "./src/work/robot/fileA/fileNameA/nameA.js",
+    "robot/fileB/fileNameB/nameB": "./src/work/robot/fileB/fileNameB/nameB.js",
+  }
+}
+```
+
+修改成如下配置，就能将文件输出到指定目录下。将entry的key由""nameA"修改成"robot/fileA/fileNameA/nameA"，就可将生成的JS文件输出到robot/fileA/fileNameA目录下。
+
+
+## 2. 输出配置
+
+```JS
+output: {
+  path: path.join(__dirname, '../public/dist/work'),
+  filename: "[name].js",
+  chunkFilename: "[name].[chunkhash:8].js"            //不宜设置成[name].[hash:8].js
+}
+```
+
+目前想到的方法是针对每个页面产生一个单独输出，并将该输出文件通过script标签置于文件底部。由于是手动输入的，无法通过插件自动注入，所以filename采用[name].js，而不采用[name].[hash:8].js，这样就不会因为每次文件变动就需手动重新载入的现象存在。
+
 
 ## 3. Resolve
 
@@ -66,11 +83,11 @@ resolve: {
 
 在导入语句没带文件后缀时，Webpack 会自动带上后缀后去尝试访问文件是否存在。
 
-**附：path.resolve方法用于将相对路径转为绝对路径。**
+**附：path.resolve方法用于将相对路径转为绝对路径。**
 
 ```Shell
 path.resolve('foo/bar', '/tmp/file/', '..', 'a/../subfile')
-// 上面代码的实例，执行效果类似下面的命令。
+# 上面代码的实例，执行效果类似下面的命令。
 
 $ cd foo/bar
 $ cd /tmp/file/
@@ -87,31 +104,7 @@ $ pwd
 
 
 
-### 3.2 场景需求
-
-#### 3.2.1 多个文件输出到多个目录
-
-**原entry配置**
-
-```JSON
-{
-  "entry": {
-    "nameA": "./src/work/robot/fileA/fileNameA/nameA.js",
-    "nameB": "./src/work/robot/fileB/fileNameB/nameB.js",
-  }
-}
-```
-
-修改成如下配置，就能将文件输出到指定目录下。
-
-```JSON
-{
-  "entry": {
-    "robot/fileA/fileNameA/nameA": "./src/work/robot/fileA/fileNameA/nameA.js",
-    "robot/fileB/fileNameB/nameB": "./src/work/robot/fileB/fileNameB/nameB.js",
-  }
-}
-```
+### 3.2 
 
 #### 3.2.2 css-module问题
 
