@@ -5,7 +5,7 @@ Webpack 配置
 
 个人对jQuery用起来不是特别熟练，维护起来分外痛苦。其次，产品经理设计产品原型采用的是Ant Design，使用jQuery很难做到与产品设计的统一。
 
-由于原项目已经很庞大，对项目代码进行重构不太现实，故只能针对后续需求的迭代开发采用React。在jQuery的基础上再采用React进行开发，会遇到不少性能问题，目前采用了如下方式进行了性能优化：
+由于原项目已经很庞大，对项目代码进行重构不太现实，故只能针对后续需求的迭代开发采用React。针对这种多页面的情况，需配置下Webpack，针对这种情况的Webpack配置过程如下。
 
 ## 1. 输入配置
 
@@ -32,7 +32,9 @@ Webpack 配置
 <script type="text/javascript" src="/dist/work/pageA.js"></script>   <!-- 手动注入react代码 --> 
 ```
 
-需求可以概括为：每个页面都有一个对应的JS脚本和CSS文件，为了防止页面重名，需将JS脚本和CSS文件输出到不同目录下。webpack此时就需配置成多入口多输出的形式，ntry的配置如下所示：
+需求可以简单概括为：每个页面都有一个对应的JS脚本和CSS文件，为了防止页面重名，需将JS脚本和CSS文件输出到不同目录下。webpack此时就需配置成多入口多输出的形式。
+
+**entry的配置**
 
 ```JSON
 {
@@ -55,7 +57,7 @@ output: {
 }
 ```
 
-由于不同的页面对应着不同的JS脚本，只能通过手动输入，无法通过插件自动注入，所以filename采用[name].js，而不采用[name].[hash:8].js，这样就不会因为每次文件变动就需手动重新载入的现象存在。
+由于不同的页面对应着不同的JS脚本，只能通过手动注入，无法通过插件自动注入，所以filename采用[name].js，而不采用[name].[hash:8].js，这样就不会因为每次文件变动而需手动重新再次注入的问题存在。
 
 ## 3. Resolve
 
@@ -73,11 +75,11 @@ resolve: {
   },
 ```
 
-**alias**
+#### 3.1 alias
 
 通过别名来把原导入路径映射成一个新的导入路径。当通过import componentA from 'Components/componentA'时，会被等价替换成import componentA from '../src/component'
 
-**extensions**
+#### 3.2 extensions
 
 在导入语句没带文件后缀时，Webpack 会自动带上后缀后去尝试访问文件是否存在。
 
