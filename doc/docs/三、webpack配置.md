@@ -19,7 +19,7 @@ output: {
 }
 ```
 
-有别于传统的SPA应用，本项目的路由分发在Node端进行，并采用了ejs模板引擎进行渲染。在这样的场景下采用react框架进行后续需求迭代开发，目前想到的方法是针对每个页面产生一个单独输出，并将该输出文件通过script标签置于文件底部。由于是手动输入的，无法通过插件自动注入，所以filename采用[name].js，而不采用[name].[hash:8].js，这样就不会有每次文件变动就需手动重新载入的现象存在。
+有别于传统的SPA应用，本项目的路由分发在Node端进行，并采用了ejs模板引擎进行渲染。在这样的场景下采用react框架进行后续需求迭代开发，目前想到的方法是针对每个页面产生一个单独输出，并将该输出文件通过script标签置于文件底部。由于是手动输入的，无法通过插件自动注入，所以filename采用[name].js，而不采用[name].[hash:8].js，这样就不会因为每次文件变动就需手动重新载入的现象存在。
 
 ```html
 <link rel="stylesheet" type="text/css" href="/dist/work/pageA.css">   <!-- 手动注入css -->
@@ -42,7 +42,44 @@ output: {
 <script type="text/javascript" src="/dist/work/pageA.js"></script>   <!-- 手动注入react代码 --> 
 ```
 
-### 3.1 webpack 4
+## 3. Resolve
+
+Resolve 配置 Webpack 如何寻找模块所对应的文件。 
+
+```JS
+resolve: {
+    alias: {
+      Component: path.resolve(__dirname, '../src/component/'),
+      Util: path.resolve(__dirname, '../src/util/'),
+      Redux: path.resolve(__dirname, '../src/redux'),
+      Api: path.resolve(__dirname, '../src/api')
+    },
+    extensions: ['.js', '.jsx', '.json'],
+  },
+```
+
+**alias**
+
+通过别名来把原导入路径映射成一个新的导入路径。当通过import componentA from 'Components/componentA'时，会被等价替换成import componentA from '../src/component'
+
+**extensions**
+
+在导入语句没带文件后缀时，Webpack 会自动带上后缀后去尝试访问文件是否存在。
+
+**附：path.resolve方法用于将相对路径转为绝对路径。**
+
+```Shell
+path.resolve('foo/bar', '/tmp/file/', '..', 'a/../subfile')
+// 上面代码的实例，执行效果类似下面的命令。
+
+$ cd foo/bar
+$ cd /tmp/file/
+$ cd ..
+$ cd a/../subfile
+$ pwd
+```
+
+### 4 webpack 4
 
 #### 3.1.1 新特性
 
