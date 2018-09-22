@@ -32,7 +32,7 @@ Webpack 配置
 <script type="text/javascript" src="/dist/work/pageA.js"></script>   <!-- 手动注入react代码 --> 
 ```
 
-需求可以概括为：每个页面都有一个对应的JS脚本和CSS文件。为了防止页面重名，需将JS脚本输出到不同目录下。webpack此时就需配置成多入口多输出的形式，entry的配置如下所示：
+需求可以概括为：每个页面都有一个对应的JS脚本和CSS文件，为了防止页面重名，需将JS脚本和CSS文件输出到不同目录下。webpack此时就需配置成多入口多输出的形式，ntry的配置如下所示：
 
 ```JSON
 {
@@ -43,8 +43,7 @@ Webpack 配置
 }
 ```
 
-修改成如下配置，就能将文件输出到指定目录下。将entry的key由""nameA"修改成"robot/fileA/fileNameA/nameA"，就可将生成的JS文件输出到robot/fileA/fileNameA目录下。
-
+将entry的key由原来的"nameA"修改成"robot/fileA/fileNameA/nameA"，就可将生成的JS文件、CSS输出到robot/fileA/fileNameA目录下。
 
 ## 2. 输出配置
 
@@ -56,8 +55,7 @@ output: {
 }
 ```
 
-目前想到的方法是针对每个页面产生一个单独输出，并将该输出文件通过script标签置于文件底部。由于是手动输入的，无法通过插件自动注入，所以filename采用[name].js，而不采用[name].[hash:8].js，这样就不会因为每次文件变动就需手动重新载入的现象存在。
-
+由于不同的页面对应着不同的JS脚本，只能通过手动输入，无法通过插件自动注入，所以filename采用[name].js，而不采用[name].[hash:8].js，这样就不会因为每次文件变动就需手动重新载入的现象存在。
 
 ## 3. Resolve
 
