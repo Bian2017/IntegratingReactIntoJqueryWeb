@@ -5,7 +5,7 @@ Webpack 配置
 
 个人对jQuery用起来不是特别熟练，维护起来分外痛苦。其次，产品经理设计产品原型采用的是Ant Design，使用jQuery很难做到与产品设计的统一。
 
-由于原项目已经很庞大，对项目代码进行重构不太现实，故只能针对后续需求的迭代开发采用React。针对这种多页面的情况，需配置下Webpack，针对这种情况的Webpack配置过程如下。
+由于原项目已经很庞大，对项目代码进行重构不太现实，故只能针对后续需求的迭代开发采用React。针对这种多页面的情况，需配置Webpack，Webpack的配置过程如下所述。
 
 ## 1. 输入配置
 
@@ -95,16 +95,23 @@ $ cd ..
 $ cd a/../subfile
 $ pwd
 ```
+### 4 (待补充)
+
+### 5. 插件splitChunks
+
+webpack 4 移除了 CommonsChunkPlugin, 取而代之的是两个新的配置项 optimization.splitChunks 和 optimization.runtimeChunk。
+
+```JS
+optimization: {
+  splitChunks: {
+    chunks: 'all',
+    name: 'common',
+  }
+}
+```
 
 ### 4 webpack 4
 
-#### 3.1.1 新特性
-
-+ webpack 4 将移除 CommonsChunkPlugin, 取而代之的是两个新的配置项 optimization.splitChunks 和 optimization.runtimeChunk。
-
-
-
-### 3.2 
 
 #### 3.2.2 css-module问题
 
