@@ -1,7 +1,55 @@
+atool-build使用小结以及弃坑缘由
+---
 
-# atool-build使用小结
+项目背景：原项目是典型的MVC结构，前端页面开发采用的是jQuery + EJS，通过NodeJS进行了路由跳转以及中间层处理。
 
-### 2.1 webpack.config.js
+个人对jQuery用起来不是特别熟练，维护起来比较痛苦。其次，产品经理设计产品原型采用的是蚂蚁金服的Ant Design，使用jQuery + Bootstrap很难做到与产品原型的统一。
+
+由于我个人对React比较熟练，就想在原项目的基础上引入React框架。而原项目比较庞大，短期内对项目代码进行重构不太现实，故只能针对产品后续需求开发采用React。在实践初期，由于工期较紧，便采用了Ant Design提供的[atool-build](https://ant-tool.github.io/index.html)来进行项目的构建与调试。
+
+### 1. 配置输入、输出
+
+有别于传统的SPA应用，本项目的路由分发在Node端进行，并采用了EJS模板引擎进行渲染。要在原有项目上进行兼容，并使用React进行后续需求开发，目前想到的办法是针对每个页面都设置entry，然后生成不同的bundle文件。最后每个页面通过script标签把自己的bundle文件引进来。
+
+```html
+<link rel="stylesheet" type="text/css" href="/dist/work/pageA.css">   <!-- 手动注入css -->
+<div>
+    <ol class="breadcrumb">
+        <li>
+            <a>
+                <%=title%>
+            </a>
+        </li>
+        <li class="pull-right">
+            <a class="btn btn-sm btn-default" href="#/wechat">
+                <i class="fa fa-chevron-left"></i>
+                返回列表
+            </a>
+        </li>
+    </ol>
+    <div class="wechat" id="wcManage"></div>
+</div>
+<script type="text/javascript" src="/dist/work/pageA.js"></script>   <!-- 手动注入react代码 --> 
+```
+
+需求可以简单概括为：每个页面都有一个对应的JS脚本和CSS文件，为了防止页面重名，需将JS脚本和CSS文件输出到不同目录下。atool-build需配置成多入口多输出的形式。
+
+#### 1.1 package.json
+
+entry 字段 atool-build 要求需配置在 package.json 文件中。
+
+**解决：**
+
+```JS
+{
+  "entry": {
+    "robot/fileA/fileA": "./src/work/robot/fileA/index.js",     // 通过修改key值实现不同文件置于不同目录下 
+    "robot/fileB/fileB": "./src/work/robot/fileB/index.js"
+  }
+}
+```
+
+#### 1.2 webpack.config.js
 
 ```JS
 var path = require('path')
@@ -17,26 +65,9 @@ module.exports = function (webpackConfig) {
 }
 ```
 
-### 2.2 package.json
+### 2. atool-build弃坑
 
-atool-build 要求在 package.json 文件里面增加 entry 字段。
-
-区别于传统的SPA应用，公司项目的路由跳转是在Node端实现的。要在原有项目上进行兼容，并使用React进行后续需求开发，目前想到的办法是针对每个页面都设置entry，然后生成不同的bundle文件。最后每个页面通过script标签把自己的bundle文件引进来。
-
-此时有个问题：如何针对不同目录下的入口js，编译生成的bundle文件也存放在不同目录下。**解决：**
-
-```JSON
-{
-  "entry": {
-    "robot/fileA/fileA": "./src/work/robot/fileA/index.js",
-    "robot/fileB/fileB": "./src/work/robot/fileB/index.js"
-  }
-}
-```
-
-## 四、atool-build弃坑缘由
-
-### 错误："Cannot read property 'call' of undefined"
+#### 2.1 无法解决错误："Cannot read property 'call' of undefined"
 
 项目背景：entry---存在多个entry文件，output---每个entry对应一个output，并且需提取公共文件。
 

@@ -1,4 +1,4 @@
-IntegratingReactIntoJqueryWeb
+Integrating React into Existing jQuery Web Applications
 ---
 
 ### 项目背景
@@ -7,7 +7,7 @@ IntegratingReactIntoJqueryWeb
 
 个人对jQuery用起来不是特别熟练，维护起来比较痛苦。其次，产品经理设计产品原型采用的是蚂蚁金服的Ant Design，使用jQuery + Bootstrap很难做到与产品原型的统一。
 
-由于我个人对React比较熟练，就想在原项目的基础上引入React框架。而原项目比较庞大，短期内对项目代码进行重构不太现实，故只能针对产品后续需求开发采用React。在使用React开发后续需求的过程中，遇到了不少坑，针对这些坑的处理，都整理了以下文档，如下所示：
+由于我个人对React比较熟练，就想在原项目的基础上引入React框架。而原项目比较庞大，短期内对项目代码进行重构不太现实，故只能针对产品后续需求开发采用React。在使用React开发后续需求的过程中，遇到了不少坑，针对这些坑的处理，整理了以下文档，如下所示：
 
 [一、atool-build使用小结以及弃坑缘由](https://github.com/Bian2017/jQueryWithReact/blob/master/doc/docs/%E4%B8%80%E3%80%81%08atool-build%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93%E4%BB%A5%E5%8F%8A%E5%BC%83%E5%9D%91%E7%BC%98%E7%94%B1.md)
 
