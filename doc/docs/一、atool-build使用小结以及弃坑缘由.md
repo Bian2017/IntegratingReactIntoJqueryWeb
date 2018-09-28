@@ -74,7 +74,7 @@ import styles from './myfile.css'
 <div className={styles.someclass} />    // CSS Modules语法(dva默认开启)
 ```
 
-此时可以通过如下方式引用CSS：
+使用atool-build编译上述代码，是无法获取class的，读出的styles值为空。此时可以通过如下方式引用CSS：
 
 ```JS
 import './myfile.css'
