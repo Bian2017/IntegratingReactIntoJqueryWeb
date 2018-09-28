@@ -65,7 +65,7 @@ module.exports = function (webpackConfig) {
 
 ### 2. 默认不开启CSS Modules 
 
-atool-build与dva框架在CSS这块有些差异，dva是默认开启了css-modules，而atool-build则并没有默认开启这一功能。
+atool-build与dva-cli在CSS这块存在一些差异，dva-cli默认开启了css-modules，而atool-build则并没有默认开启这一功能。
 
 ```JS
 import styles from './myfile.css'
