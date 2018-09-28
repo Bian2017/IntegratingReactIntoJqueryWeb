@@ -67,15 +67,13 @@ module.exports = function (webpackConfig) {
 
 #### 2.1 watch模式无法解决错误："Cannot read property 'call' of undefined"
 
-项目背景：entry---存在多个entry文件，output---每个entry对应一个output，并且需提取公共文件。
-
 在开发过程中，会运行脚本atool-build -w，用来监测文件变化并进行自动编译。但在实践中，每当文件改动时，脚本自动编译后就会报如下错误：
 
 > Uncaught TypeError: Cannot read property 'call' of undefined。
 
 而直接运行脚本atool-build进行编译，则不会报上述错误。也就是说上述错误只出现在watch模式下。
 
-经排查，这个问题可能与atool-build使用了CommonsChunkPlugin插件有关，GitHub相关issue见[链接](https://github.com/webpack/webpack/issues/959)。
+经排查，这个问题与atool-build使用了CommonsChunkPlugin插件(用于提取公共文件)有关，GitHub相关issue见[链接](https://github.com/webpack/webpack/issues/959)。
 
 问题起因：
 
