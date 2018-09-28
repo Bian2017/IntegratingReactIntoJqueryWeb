@@ -1,5 +1,10 @@
 
-#### 4.3 Ant Design使用注意点---Tabs
+Ant Design使用小结
+---
+
+
+
+### 1. Tabs组件
 
 报错如下：TypeError: Cannot read property 'ownerDocument' of undefined
 
@@ -75,3 +80,7 @@ render() {
 }
 
 ```
+
+### 2. 不要在TabPane中使用模态框Modal
+
+在TabPane中使用模态框Modal，会使模态框Modal的阴影产生叠加，导致模态框的背景色由半透明淡灰色经叠加后，产生全黑色。
