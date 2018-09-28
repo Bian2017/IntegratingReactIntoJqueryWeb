@@ -5,11 +5,11 @@ atool-build使用小结以及弃坑缘由
 
 个人对jQuery用起来不是特别熟练，维护起来比较痛苦。其次，产品经理设计产品原型采用的是蚂蚁金服的Ant Design，使用jQuery + Bootstrap很难做到与产品原型的统一。
 
-由于我个人对React比较熟练，就想在原项目的基础上引入React框架。而原项目比较庞大，短期内对项目代码进行重构不太现实，故只能针对产品后续需求开发采用React。在实践初期，由于工期较紧，便采用了Ant Design提供的[atool-build](https://ant-tool.github.io/index.html)来进行项目的构建与调试。
+由于我个人对React比较熟练，就想在原项目的基础上引入React框架。而原项目比较庞大，短期内对项目代码进行重构不太现实，故只能针对产品后续需求开发采用React。在实践初期，由于工期较紧，为了实现快速开发，便采用了Ant Design提供的[atool-build](https://ant-tool.github.io/index.html)来进行项目的构建与调试。
 
 ### 1. 配置输入、输出
 
-有别于传统的SPA应用，本项目的路由分发在Node端进行，并采用了EJS模板引擎进行渲染。要在原有项目上进行兼容，并使用React进行后续需求开发，目前想到的办法是针对每个页面都设置entry，然后生成不同的bundle文件。最后每个页面通过script标签把自己的bundle文件引进来。
+有别于传统的SPA应用，本项目的路由分发在Node端进行，并采用了EJS模板引擎进行渲染。要在原有项目上进行兼容，并使用React进行后续需求开发，目前想到的办法是针对每个页面都设置entry，然后生成不同的bundle文件，最后每个页面通过script标签把自己的bundle文件引进来。
 
 ```html
 <link rel="stylesheet" type="text/css" href="/dist/work/pageA.css">   <!-- 手动注入css -->
@@ -32,13 +32,11 @@ atool-build使用小结以及弃坑缘由
 <script type="text/javascript" src="/dist/work/pageA.js"></script>   <!-- 手动注入react代码 --> 
 ```
 
-需求可以简单概括为：每个页面都有一个对应的JS脚本和CSS文件，为了防止页面重名，需将JS脚本和CSS文件输出到不同目录下。atool-build需配置成多入口多输出的形式。
+简单概括为：每个页面都有一个对应的React JS脚本和CSS文件，为了防止JS文件重名，需将JS脚本和CSS文件输出到不同目录下，atool-build就需配置成多入口多输出的形式。
 
 #### 1.1 package.json
 
-entry 字段 atool-build 要求需配置在 package.json 文件中。
-
-**解决：**
+设置entry字段：entry字段atool-build要求需配置在package.json文件中。
 
 ```JS
 {
@@ -67,19 +65,19 @@ module.exports = function (webpackConfig) {
 
 ### 2. atool-build弃坑
 
-#### 2.1 无法解决错误："Cannot read property 'call' of undefined"
+#### 2.1 watch模式无法解决错误："Cannot read property 'call' of undefined"
 
 项目背景：entry---存在多个entry文件，output---每个entry对应一个output，并且需提取公共文件。
 
-在开发过程中，会运行脚本atool-build -w，用来监测文件变化并进行自动编译。但在实践中，每当文件改动时，脚本自动编译后就会报如下错误：
+在开发过程中，会运行脚本atool-build -w，用来监测文件变化并进行自动编译。但在实践中，每当文件改动时，脚本自动编译后就会报如下错误：
 
 > Uncaught TypeError: Cannot read property 'call' of undefined。
 
-而直接运行脚本atool-build进行编译，则不会报上述错误。也就是说上述错误只出现在watch模式下。
+而直接运行脚本atool-build进行编译，则不会报上述错误。也就是说上述错误只出现在watch模式下。
 
-经排查，这个问题可能与atool-build使用了CommonsChunkPlugin插件有关，GitHub相关issue见[链接](https://github.com/webpack/webpack/issues/959)。
+经排查，这个问题可能与atool-build使用了CommonsChunkPlugin插件有关，GitHub相关issue见[链接](https://github.com/webpack/webpack/issues/959)。
 
-问题起因：
+问题起因：
 
 ```
 For everyone running into this,
@@ -111,4 +109,4 @@ So, as a temporary solution before this bug has fixed:
 3.If you did all operations before, trouble is still alive, try solve the dependencies by your hand.(change the order you import the scripts in html)
 ```
 
-如上所述，需进行插件的配置，而atool-build很难进行插件的私有配置，故只能舍弃atool-build。
+如上所述，需进行插件的配置，而atool-build很难进行插件的私有配置，故只能舍弃atool-build。
