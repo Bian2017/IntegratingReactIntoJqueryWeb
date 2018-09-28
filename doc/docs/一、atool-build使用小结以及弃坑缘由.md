@@ -63,9 +63,31 @@ module.exports = function (webpackConfig) {
 }
 ```
 
-### 2. atool-build弃坑
+### 2. 默认不开启CSS Modules 
 
-#### 2.1 watch模式无法解决错误："Cannot read property 'call' of undefined"
+atool-build与dva框架在CSS这块有些差异，dva是默认开启了css-modules，而atool-build则并没有默认开启这一功能。
+
+```JS
+import styles from './myfile.css'
+
+...
+<div className={styles.someclass} />    // CSS Modules语法(dva默认开启)
+```
+
+此时可以通过如下方式引用CSS：
+
+```JS
+import './myfile.css'
+
+...
+<div className={someclass} />          // CSS Modules语法，但没有设置modules，所以classNames会被导出到全局范围。
+```
+
+注意：[CSS Modlues](http://www.ruanyifeng.com/blog/2016/06/css_modules.html)与[CSS in JS](http://www.ruanyifeng.com/blog/2017/04/css_in_js.html)的区别。
+
+### 3. atool-build弃坑
+
+#### 3.1 watch模式无法解决错误："Cannot read property 'call' of undefined"
 
 在开发过程中，会运行脚本atool-build -w，用来监测文件变化并进行自动编译。但在实践中，每当文件改动时，脚本自动编译后就会报如下错误：
 
