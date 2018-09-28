@@ -1,8 +1,9 @@
-# jQueryWithReact
+jQueryWithReact
+---
 
-## 项目背景
+### 项目背景
 
-项目背景：原项目是典型的MVC结构，前端页面的开发采用的是jQuery + ejs，通过NodeJS进行了路由跳转以及服务端渲染。
+原项目是典型的MVC结构，前端页面的开发采用的是jQuery + ejs，通过NodeJS进行了路由跳转以及服务端渲染。
 
 个人对jQuery用起来不是特别熟练，维护起来比较痛苦。其次，产品经理设计产品原型采用的是Ant Design，使用jQuery很难做到与产品设计的统一。
 
