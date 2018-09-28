@@ -4,9 +4,9 @@ jQuery使用小结
 
 jQuery()方法的第二个参数详解(https://blog.csdn.net/bobo_93/article/details/53323237)
 
-### 二、jQuery常用API
+## 二、jQuery常用API
 
-#### 2.1 data()用法
+### 2.1 data()用法
 
 data()用来将数据绑定在DOM元素上，在实际项目中用来**存储服务器端数据**和传递到JavaScript，可以说是JavaScript使用服务器端数据的一个桥梁。
 
@@ -16,13 +16,17 @@ data()用来将数据绑定在DOM元素上，在实际项目中用来**存储服
 
 [更多知识](http://www.html-js.com/article/1747)
 
-### 三、jQuery常用插件
+**踩坑：data缓存问题**
 
-#### 3.1 jQuery Validate插件
+原页面有一堆电话表格，点击要拨打的电话，会将电话号码绑定在拨打Button的data属性上，当Button每次读取自己的data属性，发现永远是第一次要拨打的电话号码。
+
+## 三、jQuery常用插件
+
+### 3.1 jQuery Validate插件
 
 jQuery Validate 插件为表单提供了强大的验证功能，让客户端表单验证变得更简单，官网[链接](https://jqueryvalidation.org/)。
 
-**踩坑：**
+**踩坑：插件与Ant Design的冲突**
 
 原页面是采用jQuery开发的，并采用Validate插件进行表单的验证。当在这个页面引入Ant Design的Form表单时，每次对Ant Design的Input组件输入数据，就会提示如下错误：
 
