@@ -1,6 +1,11 @@
-React是一个JavaScript Web UI框架，允许您为Web应用程序构建基于组件的用户界面控件。使用框架（例如React）的一个好处是，您创建的每个组件都保持其自己的状态，与其他组件无关。它还使得开发单独的UI部件变得容易和干净，与Web应用程序的其余部分分开，并且可以在应用程序的其他区域甚至在其他Web应用程序中重复使用。
+如何在现有的JQuery Web应用上引入React框架
+---
 
-由于许多现有的Web应用程序以前是使用JQuery开发的，因此可能需要构建一个可以与JQuery Web应用程序集成和通信的新React组件或Web应用程序。例如，您可能希望从可能在页面上呈现的基于JQuery的Web应用程序中读取信息。然后，您希望在React组件中显示该数据。为此，您的React组件需要某种方式从JQuery应用程序请求数据，然后将其存储在其状态中。
+[参考链接](http://www.primaryobjects.com/2017/05/08/integrating-react-with-an-existing-jquery-web-application/)
+
+使用React框架构建UI会带来好多好处，其中一个好处就是，您创建的每个组件都有自己的状态，与其他组件无关。它使得开发单独的UI组件变得容易干净，与Web应用程序的其余部分分开，并且可以在Web应用的其他区域甚至在其他Web应用中重复使用。
+
+由于许多现有的Web应用程序以前是使用JQuery开的，因此可能需要构建一个可以与JQuery Web应用程序集成和通信的新React组件或Web应用程序。例如，您可能希望从可能在页面上呈现的基于JQuery的Web应用程序中读取信息。然后，您希望在React组件中显示该数据。为此，您的React组件需要某种方式从JQuery应用程序请求数据，然后将其存储在其状态中。
 
 同样，也许您有一个现有的JQuery应用程序，并且您希望您的React组件将数据发送到JQuery应用程序以在Web页面上呈现。您需要一个类似的集成点才能与JQuery应用程序通信，告诉它更新页面上的数据区域。
 
@@ -8,9 +13,9 @@ React是一个JavaScript Web UI框架，允许您为Web应用程序构建基于�
 
 在本文中，我们将介绍将React组件与现有JQuery Web应用程序集成的步骤。我们将介绍如何在JQuery和React之间来回通信，允许两个部分相应地更新其状态并在网页上呈现数据。我们还将演示如何访问JQuery $（this）上下文，以便更新部分UI并直接从React组件中读取JQuery控件中的数据。
 
-## 从JQuery到React
+## 一、从JQuery到React
 
-React组件与JQuery通信存在两个基本方法。首先，我们假设有如下简单的HTML文档。
+React组件与JQuery通信存在两个基本方法。首先，我们假设有如下简单的HTML。
 
 ```HTML
 <div class='container'>
@@ -21,23 +26,23 @@ React组件与JQuery通信存在两个基本方法。首先，我们假设有�
 </div>
 ```
 
-如上，JQuery应用程序包含标题h1和彩色方块div，同时还包含了一个div作为React组件在其中呈现的基础。让我们看看允许React与外部应用程序的UI元素交互的几种方法。
+如上，JQuery应用包含标题h1和彩色方块div，同时还包含了一个div作为React组件在其中呈现的基础。让我们看看允许React与外部应用程序的UI元素交互的几种方法。
 
-我们将实现3种不同的方法来与React中的JQuery进行交互。将讨论以下方法：
+我们将实现3种不同的方法来与React中的JQuery进行交互：
 
 + 从React中引用JQuery上下文；
-+ 使用传递给React的中间帮助器类。
-+ 使用传递给React的发布者/订阅者模型。
++ 使用class作为通讯媒介；
++ 使用发布者/订阅者模型；
+
 我们将从最直接的交互开始，即将JQuery对象简单地传递给React组件。
 
-直接从React引用JQuery上下文
-第一种方法涉及在最初创建React组件时，在构造函数中传递React组件JQuery上下文$（this）的副本。通过这种方式，React可以直接操作现有的Web应用程序UI元素。
+### 1.1 在React中引用JQuery上下文
 
-您可以在下图中看到此设计。
+在最初创建React组件时，通过构造函数中传递JQuery上下文$（this）的副本。通过这种方式，React可以直接操作现有的Web应用程序UI元素。
 
-![]()
+![](https://raw.githubusercontent.com/Bian2017/IntegratingReactIntoJqueryWeb/master/doc/img/jquery-react-integration-1.png)
 
-如图所示，JQuery App最初使用对React.createElement的调用创建React组件，并将JQuery应用程序的上下文context传递给组件构造函数。然后，组件可以在state中存储引用（通过props参数获得），并使用它来更新网页上的关键元素。这就实现了组件可在其自己组件区域之外更改网页元素。
+如图所示，JQuery App最初创建React组件时，调用React.createElement，并将JQuery应用程序的上下文context传递给组件构造函数。然后，组件可以在state中存储引用（通过props参数获得），并使用它来更新网页上的关键元素。这就实现了组件可在其自己组件区域之外更改网页元素。
 
 ```JS
 ReactDOM.render(React.createElement(MyComponent, { context: $('body') }), document.getElementById('root'));
@@ -46,7 +51,7 @@ ReactDOM.render(React.createElement(MyComponent, { context: $('body') }), docume
 
 上面代码示例显示了最初如何创建组件。组件的构造函数传递给JQuery主体对象的引用，该主体对象可以在组件构造函数的props中访问。
 
-### React组件
+### React组件代码
 
 代码如下所示，React组件存储JQuery上下文，并直接操作UI元素。注意构造函数如何为props创建一个参数，它将包含我们在创建时传入的JQuery上下文。上下文存储在组件的状态中。
 
@@ -82,14 +87,13 @@ class MyComponent extends React.Component {
 上面定义的组件呈现简单的消息和按钮。单击该按钮时，组件将访问JQuery上下文以更改其正常范围之外的UI元素上的背景颜色。该应用程序的屏幕截图如下所示。
 
 
-
-## 二、Using an Intermediate Javascript Class
+### 1.2 使用Class作为通讯媒介
 
 该方法创建一个Javascript对象，作为现有JQuery应用程序与React组件之间通信的媒介，并将对象引用传递给React组件。React组件可以通过封装的对象请求数据，或者使用新数据更新页面部分区域。
 
 下方流程图展示了React组件如何通过封装对象与现有JQuery应用程序进行通信。
 
-![]()
+![](https://raw.githubusercontent.com/Bian2017/IntegratingReactIntoJqueryWeb/master/doc/img/jquery-react-integration-2.png)
 
 如图所示，JQuery应用程序和React组件分别控制自己的网页元素。React组件接收封装Javascript对象的副本，以便它可以从父JQuery应用程序接收通知，以及请求更新主网页（在其自己的元素部分范围之外）。
 
@@ -154,6 +158,102 @@ class MyComponent extends React.Component {
 
 请注意，在上面的代码中，我们将UIManager引用（称为props.context）存储在React组件的状态中。当用户单击组件中的按钮时，我们通过上下文调用UIManager来检索框的当前颜色。然后我们再次调用UIManager来改变颜色。
 
+### 1.3 使用发布者/订阅者模型
+
+将React与现有JQuery应用程序集成的第三个示例是通过发布者/订阅者（pubsub）模型。这允许组件从外部Web应用程序侦听更新，以及发回更新。例如，当用户与现有Web应用程序交互时，某些事件可以触发然后发送到React组件的方法，以便它可以相应地更新其自己的UI。
+
+![]()
+使用发布者/订阅者模型的React组件，用于侦听来自父应用程序的事件
+使用发布者/订阅者模型的React组件，用于侦听来自父应用程序的事件
+
+请注意，在上面的流程图中，我们只是将UI Manager助手类替换为发布者/订阅者模型。以这种方式，可以向React组件通知来自外部Web应用程序的事件并相应地更新其自己的内部状态和用户界面控件。屏幕截图如下所示。您也可以尝试演示。
+
+
+
+例如，如果用户单击现有JQuery应用程序中的按钮，则可以将事件发送到中间Javascript类的所有订阅者，从而允许他们相应地做出响应。
+
+这种类型的设计可以使用pub / sub管理器类来实现，如下所示。
+
+```JS
+var PubSubManager = {
+  subscribers: [],
+  subscribe: function(parent, callback) {
+    this.subscribers.push({ parent: parent, callback: callback });
+  },
+  color: function(name) {
+    // Notify subscribers of event.
+    this.subscribers.forEach(function(subscriber) {
+      subscriber.callback(name, subscriber.parent);
+    });
+  }
+};
+```
+
+上面的类有一个订阅方法，客户端可以订阅从父应用程序通知事件。在这种情况下，当现有应用程序调用颜色方法时，任何订阅者都将收到更改通知，从而允许他们相应地更新自己的内部UI。
+
+例如，考虑现有应用程序每秒更改页面上方块颜色的情况。它将按顺序使用下面显示的代码从红色变为绿色。
+```JS
+$(function() {
+  setTimeout(function() {
+    ReactDOM.render(React.createElement(MyComponent, { context: PubSubManager }), document.getElementById('root'));
+  }, 0);
+  // Change the box color every few seconds.
+  setInterval(function() {
+    var box = $('#box');
+    var color = box.css('background-color') === 'rgb(255, 0, 0)' ? 'green' : 'red';
+    // Change box color.
+    box.css('background-color', color);
+    // Notify subscribers.
+    PubSubManager.color(color);
+  }, 1000)
+});
+```
+
+他上面的代码实现了一个间隔来改变每秒广场的颜色。通常，React组件无法检测到正方形的颜色变化，也无法直接访问UI元素本身。毕竟，square是一个位于React组件范围之外的div。
+
+但是，对于发布者/订阅者模型，只要方块的颜色发生变化，React组件就会要求通知。以这种方式，作为响应，React组件可以更新其自己的UI。
+
+
+React组件
+
+React组件可以订阅外部应用程序的事件，如下面的代码示例所示。注意构造函数如何存储对应用程序上下文的引用（pubsub模型）。这与本文前面的第二个示例相同，但上下文现在是发布者/订阅者模型，而不是简单的UIManager类。
+
+此外，我们调用subscribe方法来侦听现有Web应用程序中的事件。在这种情况下，我们将处理onColor事件，以便根据触发的事件更改React组件的UI。
+
+```JS
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      color: 'red',
+      context: props.context
+    };
+    // Subscribe to color events.
+    this.state.context.subscribe(this, this.onColor);
+  }
+  
+  onColor(color, that) {
+    // Update the state value for color.
+    that.setState({ color: color });
+  }
+  render() {
+    return (
+      <div className='alert alert-success' role='alert'>
+        <h3>Hello, from React!</h3>
+        <span className={ 'badge ' + (this.state.color === 'red' ? 'badge-danger' : 'badge-success') + ' p-3' }>
+          { this.state.color }
+        </span>
+      </div>
+    );
+  }
+}
+
+```
+
+在上面的代码中，我们的React组件包含一个标题消息和一个内部带有简单徽章的span标记。徽章消息根据当前状态颜色的值更改其标签和颜色。状态颜色本身由onColor事件赋值，该事件作为外部应用程序中发布者/订阅者类的回调调用。
+
+注意onColor回调如何接收颜色名称和对它的引用，这是引用React组件的上下文。我们需要发布者/订阅者模型将此发送给我们，因为被调用的事件处理程序的当前上下文来自pub / sub类，而不是我们的React组件。为了访问this.state，我们需要引用父上下文，即.state。
 
 ## 二、外部直接调用React组件方法
 
