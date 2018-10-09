@@ -31,7 +31,7 @@ React组件与JQuery通信存在两个基本方法。首先，我们假设有如
 我们将通过3种不同的方法来实现React与JQuery之间的交互：
 
 + 在React中引用JQuery上下文；
-+ 使用封装class作为通讯媒介；
++ 使用封装对象作为通讯媒介；
 + 使用发布/订阅模式；
 
 ### 1.1 在React中引用JQuery上下文
@@ -49,7 +49,7 @@ ReactDOM.render(React.createElement(MyComponent, { context: $('body') }), docume
 
 ### React组件代码
 
-如下文所示，React组件中存储了JQuery上下文context，并通过context直接操作UI元素。
+如下文所示，React组件中存储了JQuery上下文context，并通过context直接操作UI元素。
 
 ```JS
 class MyComponent extends React.Component {
@@ -82,28 +82,27 @@ class MyComponent extends React.Component {
 
 点击button，React组件将访问JQuery上下文，并更改其正常范围之外的UI元素上的背景颜色。
 
+### 1.2 使用封装对象作为通讯媒介
 
-### 1.2 使用Class作为通讯媒介
+创建一个Javascript对象，作为JQuery应用与React组件之间通信的媒介，并将对象引用传递给React组件。React组件可以通过封装对象来请求数据，或者使用新数据更新页面部分区域。
 
-该方法创建一个Javascript对象，作为现有JQuery应用程序与React组件之间通信的媒介，并将对象引用传递给React组件。React组件可以通过封装的对象请求数据，或者使用新数据更新页面部分区域。
-
-下方流程图展示了React组件如何通过封装对象与现有JQuery应用程序进行通信。
+下方流程图展示了React组件如何通过封装对象与JQuery应用进行通信。
 
 ![](https://raw.githubusercontent.com/Bian2017/IntegratingReactIntoJqueryWeb/master/doc/img/jquery-react-integration-2.png)
 
-如图所示，JQuery应用程序和React组件分别控制自己的网页元素。React组件接收封装Javascript对象的副本，以便它可以从父JQuery应用程序接收通知，以及请求更新主网页（在其自己的元素部分范围之外）。
+如图所示，JQuery应用和React组件分别控制自己的网页元素。React组件接收一个封装的Javascript对象副本，并通过该副本接收来自父JQuery应用的通知，以及通过该对象副本请求更新Web页面（在其自己的元素部分范围之外）。
 
-这种方法的一个主要好处是React组件对页面上UI元素的责任与JQuery应用程序对其自己的UI元素的责任之间的关注点分离。该组件可以维护自己独立的网页部分，同时允许JQuery继续拥有其余部分。通过封装对象发出请求，组件可以请求对其控件之外的显示进行更新，JQuery应用程序也会相应地做出响应。
+这种方法的一个主要好处是React组件对页面上UI元素的责任与JQuery应用程序对其自己的UI元素的责任之间的关注点分离。React组件可以维护自己独立的网页部分，同时允许JQuery继续拥有其余部分。通过封装对象发出请求，React组件可以请求对其控制范围之外的Web页面进行更新，JQuery应用程序也会相应地做出响应。
 
-下面显示了实例化React组件并将其传递给中间类的示例。
+举例：实例化React组件，并将封装对象传递给组件。
 
 ```JS
 ReactDOM.render(React.createElement(MyComponent, { context: UIManager }), document.getElementById('root'));
 ```
 
-注意，在上面的代码中，我们现在正在传递对JavaScript类的引用，而不是像第一个示例中那样传递JQuery上下文。该类对象将包含在React组件本身范围之外操作各种UI元素和状态的方法。
+注意，在上述代码中，我们现在正在传递的是对象的引用，而不是像第一个示例中那样传递JQuery上下文。该对象提供了在React组件本身范围之外操作各种UI元素和状态的方法。
 
-UIManager类可以定义如下。
+封装对象可以定义如下方式：
 
 ```JS
 var UIManager = {
@@ -116,14 +115,11 @@ var UIManager = {
 };
 ```
 
-请注意，上面的类只包含两种处理页面中正方形颜色的方法。我们可以检索方块的当前颜色值或更改其颜色。
+请注意，封装对象提供了两种处理页面中box颜色的方法。我们可以获取box的当前颜色值或更改其颜色。
 
-**React组件**
+**React组件代码**
 
-与第一个示例类似，我们可以将外部应用程序的上下文存储在组件的状态state中。但是，我们现在存储对中间UIManager类的引用，而不是上下文是对JQuery本身的引用。
-
-代码如下所示。
-
+与第一个示例类似，我们可以将外部应用程序的上下文存储在组件的状态state中。但是，此刻React组件存储的是对封装对象UIManager的引用，而不是上下文是对JQuery本身的引用，代码如下所示。
 
 ```JS
 class MyComponent extends React.Component {
@@ -151,8 +147,6 @@ class MyComponent extends React.Component {
   }
 }
 ```
-
-请注意，在上面的代码中，我们将UIManager引用（称为props.context）存储在React组件的状态中。当用户单击组件中的按钮时，我们通过上下文调用UIManager来检索框的当前颜色。然后我们再次调用UIManager来改变颜色。
 
 ### 1.3 使用发布者/订阅者模型
 
