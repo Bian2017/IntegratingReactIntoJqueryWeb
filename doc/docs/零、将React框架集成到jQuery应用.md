@@ -267,9 +267,9 @@ React要求您包含用于解释组件的脚本标记。您可能还需要包含
 
 要查看该页面，您需要运行本地Web服务器（例如http-server）。这将允许React正确呈现，而不是简单地在浏览器中将本地index.html文件作为file：// url打开。
 
-### 4.1 在单页面中加载React
+### 4.1 单页面如何加载React
 
-Web页面中加载React组件最简单的一个方法就是通过script标签包含React库和编写的React组件。由于React组件使用了JSX语法，因此还需要引用一个库来解释它们，称为“babel”。使用JSX创建的任何React脚本都需在script标签中指定type为“text/babel”。这告诉浏览器允许babel使用AJAX XHR请求加载脚本，而不是浏览器中的标准加载脚本。以这种方式，脚本可以由babel预处理并随后在浏览器中正确呈现。
+Web页面中加载React组件最简单的一个方法就是通过script标签包含React库和编写的React组件。由于React组件使用了JSX语法，因此还需要引用一个库来解释它们，称为“babel”。使用JSX创建的任何React脚本都需在script标签中指定type为 “text/babel” ，相当于告诉浏览器允许babel使用AJAX XHR请求加载脚本，而不是按浏览器的标准规范加载脚本。以这种方式，脚本可以由babel预处理并随后在浏览器中正确呈现。
 
 在单页面中实现加载React，需在页面中包含以下script标签：
 
@@ -282,7 +282,7 @@ Web页面中加载React组件最简单的一个方法就是通过script标签包
 <script src="MyComponent.js" type="text/babel"></script>
 ```
 
-最终的脚本标记“MyComponent.js”指的是您创建的React组件。请注意定义为text / babel的脚本标记的类型，表示该脚本将由babel使用AJAX请求加载和预处理。
+如上所示，“MyComponent.js”表示创建的React组件。请注意定义type定义为 “text/babel” ，表示该脚本将由babel使用AJAX请求加载和预处理。
 
 **index.js**
 
@@ -298,39 +298,86 @@ $(function() {
 
 在上述代码中，我们使用setTimeout来实现页面完全呈现后再展示React组件。如果您的Web页面也使用JQuery，可以将代码包含在JQuery document-ready function中。
 
-## 4.2 托管模块中的React
-在网页中包含React的更方便的方法是将React组件打包到可分发的npm模块中。
+## 4.2 从模块中加载React
+
+一个更加便捷的方法是将React组件打包到可分发的npm模块中，从而实现在Web页面中包含React将。
 
 您可以按照以下步骤使用帮助工具执行此操作。
 
-
+```Shell
+npm install -g generator-react-component
+npm install -g yo
+yo react-component
+```
 
 上面的命令将设置一个React模板项目，您可以从中创建组件。组件准备就绪后，可以使用命令npm run build打包它们。
 
 注意，Windows用户需要编辑文件package.json来更新“脚本”部分，如下所示：
 
+```JSON
+"scripts": {
+  "build": "gulp clean && SET NODE_ENV=production && gulp build",
+  "examples": "gulp dev:server",
+  "lint": "eslint ./; true",
+  "publish:site": "SET NODE_ENV=production gulp publish:examples",
+  "release": "SET NODE_ENV=production && gulp release",
+  "start": "gulp dev",
+  "test": "echo \"no tests yet\" && exit 0",
+  "watch": "gulp watch:lib"
+}
+```
 
-构建之后，您应该有一个dist文件夹，其中包含组件的javascript文件，包括缩小版本。
+构建完毕后，会生成一个dist文件夹，其中包含组件的javascript文件，包括缩小版本。
 
-## 在页面中包含Minified React Component
+###  在页面中包含Minified React Component
+
 您可以通过在网页中包含以下脚本标记来引用React组件的缩小版本。
 
-请注意，就像在独立示例中一样，我们已经包含了React库的脚本标记引用。但是，这次没有必要包括babel，因为分发过程为我们处理了这个问题。您可以直接引用组件的javascript文件，并保留text / babel type属性。
+**index.html**
 
-index.js
+```HTML
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.min.js"></script>
+<script src="my-component.min.js"></script>
+```
+
+注意，就像4.1示例中一样，我们已经包含了React库的脚本引用。但是，这次没有必要包括babel，因为分发过程为我们处理了这个问题。您可以直接引用组件的javascript文件，并保留text / babel type属性。
+
+**index.js**
+
 渲染React组件的代码与我们的其他示例相同，如下所示。
 
-## 使用Require Statements托管React
+```HTML
+$(function() {
+  setTimeout(function() {
+    ReactDOM.render(React.createElement(MyComponent, { context: LogManager }), document.getElementById('root'));
+  }, 0);
+});
+```
+
+## 4.3 通过Require声明加载React
+
 在网页中托管React组件的另一种方法是使用由生成器工具（位于example / dist / bundle.js中）生成的bundle.js文件。在运行npm start之后，最初运行您的React应用程序，将在项目的目录中创建一个示例文件夹，其中包含src和dist文件夹。您可以在dist文件夹中引用文件bundle.js，以将您的组件和React引用包含在单个文件中。使用此方法，无需在页面中引用React脚本标记。此外，您可以选择性地要求渲染特定组件。
 
-的index.html
+**index.html**
 您的网页只需要引用common.js和bundle.js，如下所示。
+```JS
+<script src="common.js"></script>
+<script src="bundle.js"></script>
+```
 
-index.js
+**index.js**
+
 渲染组件的脚本页面需要从bundle.js中获取所需的组件，如下所示。
+```JS
+var React = require('react');
+var ReactDOM = require('react-dom');
+var MyComponent = require('my-component');
+ReactDOM.render(React.createElement(MyComponent, { context: LogManager }), document.getElementById('root'));
+```
 
+## 5. 结论
 
-结论
-我们已经讨论了三种不同的方法，用于在React组件中与现有的JQuery Web应用程序进行交互。通过直接引用JQuery上下文，中间UI管理器类和发布者/订阅者模型等方法，我们可以提供一系列设计方法，允许React组件与其内部组件范围之外的UI元素进行交互。 。
+我们已经讨论了三种不同的方法，用于在React组件中与现有的JQuery Web应用进行交互。通过直接引用JQuery上下文，中间UI管理器类和发布者/订阅者模型等方法，我们可以提供一系列设计方法，允许React组件与其内部组件范围之外的UI元素进行交互。 。
 
 当然，有许多不同的方法可以实现类似的设计。您甚至可以直接从React组件中引用JQuery并随意选择元素。但是，除非将状态值存储在HTML元素的数据属性中，否则这将不允许您访问外部应用程序本身的上下文/范围。否则，通过将React组件传递给应用程序上下文的实例，您可以允许将React组件集成到现有的JQuery应用程序中，而对应用程序的其余部分几乎没有中断。
