@@ -15,7 +15,7 @@
 
 ## 一、从JQuery到React
 
-React组件与JQuery通信存在两个基本方法。首先，我们假设有如下简单的HTML。
+React组件与JQuery通信存在两个基本方法。首先，我们假设有如下HTML。
 
 ```HTML
 <div class='container'>
@@ -26,34 +26,30 @@ React组件与JQuery通信存在两个基本方法。首先，我们假设有�
 </div>
 ```
 
-如上，JQuery应用包含标题h1和彩色方块div，同时还包含了一个div作为React组件在其中呈现的基础。让我们看看允许React与外部应用程序的UI元素交互的几种方法。
+如上，JQuery应用包含标题h1和div box，同时还包含了一个div root作为React组件在其中呈现的基础。
 
-我们将实现3种不同的方法来与React中的JQuery进行交互：
+我们将通过3种不同的方法来实现React与JQuery之间的交互：
 
-+ 从React中引用JQuery上下文；
-+ 使用class作为通讯媒介；
-+ 使用发布者/订阅者模型；
-
-我们将从最直接的交互开始，即将JQuery对象简单地传递给React组件。
++ 在React中引用JQuery上下文；
++ 使用封装class作为通讯媒介；
++ 使用发布/订阅模式；
 
 ### 1.1 在React中引用JQuery上下文
 
-在最初创建React组件时，通过构造函数中传递JQuery上下文$（this）的副本。通过这种方式，React可以直接操作现有的Web应用程序UI元素。
+创建React组件时，通过构造函数传递JQuery上下文 $(this) 的副本。通过这种方式，React可以直接操作Web应用中的UI元素。
 
 ![](https://raw.githubusercontent.com/Bian2017/IntegratingReactIntoJqueryWeb/master/doc/img/jquery-react-integration-1.png)
 
-如图所示，JQuery App最初创建React组件时，调用React.createElement，并将JQuery应用程序的上下文context传递给组件构造函数。然后，组件可以在state中存储引用（通过props参数获得），并使用它来更新网页上的关键元素。这就实现了组件可在其自己组件区域之外更改网页元素。
+如图所示，JQuery应用创建React组件时，调用React.createElement，将JQuery应用的上下文context作为参数传递给React组件的构造函数。然后，组件可以在state中存储引用（通过props参数获取），并使用它来更新Web页面中的关键元素。这就实现了组件可在其自己组件区域之外更改Web页面元素。
 
 ```JS
-ReactDOM.render(React.createElement(MyComponent, { context: $('body') }), document.getElementById('root'));
-});
+ReactDOM.render(React.createElement(MyComponent, { context: $('body') }), document.getElementById('root'))
+})
 ```
-
-上面代码示例显示了最初如何创建组件。组件的构造函数传递给JQuery主体对象的引用，该主体对象可以在组件构造函数的props中访问。
 
 ### React组件代码
 
-代码如下所示，React组件存储JQuery上下文，并直接操作UI元素。注意构造函数如何为props创建一个参数，它将包含我们在创建时传入的JQuery上下文。上下文存储在组件的状态中。
+如下文所示，React组件中存储了JQuery上下文context，并通过context直接操作UI元素。
 
 ```JS
 class MyComponent extends React.Component {
@@ -61,9 +57,9 @@ class MyComponent extends React.Component {
     super(props);
     
     this.state = {
-      context: props.context
-    };
-    this.onClick = this.onClick.bind(this);
+      context: props.context                        // 存储jQuery的上下文context
+    }
+    this.onClick = this.onClick.bind(this)
   }
   
   onClick() {
@@ -79,12 +75,12 @@ class MyComponent extends React.Component {
         <h3>Hello, from React!</h3>
         <button type='button' className='btn btn-default' onClick={ this.onClick }>Click Me</button>
       </div>
-    );
+    )
   }
 }
 ```
 
-上面定义的组件呈现简单的消息和按钮。单击该按钮时，组件将访问JQuery上下文以更改其正常范围之外的UI元素上的背景颜色。该应用程序的屏幕截图如下所示。
+点击button，React组件将访问JQuery上下文，并更改其正常范围之外的UI元素上的背景颜色。
 
 
 ### 1.2 使用Class作为通讯媒介
